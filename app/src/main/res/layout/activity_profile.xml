@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_centerHorizontal="true"
+    android:orientation="vertical"
+    tools:context="com.haibeey.vote.activities.profile">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/green"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+
+    </android.support.design.widget.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content">
+    <android.support.v7.widget.CardView
+        android:layout_width="300sp"
+        android:id="@+id/cc"
+        android:layout_marginTop="@dimen/fab_margin"
+        android:layout_gravity="center"
+        android:elevation="@dimen/fab_margin"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_gravity="center"
+            android:layout_height="match_parent">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="100dp"
+                android:id="@+id/dimage"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
+                app:srcCompat="@color/green"
+                android:src="@color/green"
+                android:layout_height="150dp" />
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:elevation="@dimen/fab_margin"
+                android:foregroundGravity="center"
+                android:layout_below="@+id/dimage"
+                android:padding="@dimen/fab_margin"
+                android:id="@+id/name"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:id="@+id/dname"
+                    android:text="abraha, "
+                    android:layout_below="@+id/dimage"
+                    android:textColor="@color/green"
+                    android:textSize="@dimen/fab_margin"
+                    android:layout_centerHorizontal="true"
+                    android:padding="@dimen/fab_margin"
+                    android:layout_height="wrap_content" />
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_marginTop="50sp"
+                android:layout_width="match_parent"
+                android:elevation="@dimen/fab_margin"
+                android:foregroundGravity="center"
+                android:layout_below="@+id/name"
+                android:padding="100sp"
+                android:id="@+id/name2"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:id="@+id/dname2"
+                    android:text="abraha, "
+                    android:layout_below="@+id/dimage"
+                    android:textColor="@color/green"
+                    android:textSize="@dimen/fab_margin"
+                    android:layout_centerHorizontal="true"
+                    android:padding="@dimen/fab_margin"
+                    android:layout_height="wrap_content" />
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_marginTop="50sp"
+                android:layout_width="match_parent"
+                android:elevation="@dimen/fab_margin"
+                android:foregroundGravity="center"
+                android:layout_below="@+id/name2"
+                android:padding="100sp"
+                android:id="@+id/name3"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:id="@+id/dname3"
+                    android:text="abraha, "
+                    android:layout_below="@+id/dimage"
+                    android:textColor="@color/green"
+                    android:textSize="@dimen/fab_margin"
+                    android:layout_centerHorizontal="true"
+                    android:padding="@dimen/fab_margin"
+                    android:layout_height="wrap_content" />
+            </android.support.v7.widget.CardView>
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+    </ScrollView>
+
+</LinearLayout>

@@ -1,0 +1,74 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.haibeey.vote.fragments.voteSliding">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_gravity="center"
+        app:cardCornerRadius="10sp"
+        android:background="@color/green"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_gravity="center"
+            android:layout_height="match_parent">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="100dp"
+                android:id="@+id/dimage"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
+                android:src="@color/green"
+                android:layout_height="100dp" />
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:elevation="@dimen/fab_margin"
+                android:foregroundGravity="center"
+                android:layout_below="@+id/dimage"
+                android:padding="@dimen/fab_margin"
+                android:id="@+id/name"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:id="@+id/dname"
+                    android:text="abraha, "
+                    android:layout_below="@+id/dimage"
+                    android:textColor="@color/green"
+                    android:textSize="@dimen/fab_margin"
+                    android:layout_centerHorizontal="true"
+                    android:padding="@dimen/fab_margin"
+                    android:layout_height="wrap_content" />
+            </android.support.v7.widget.CardView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:id="@+id/dcount"
+                    android:text="bshgshs"
+                    android:layout_centerHorizontal="true"
+                    android:padding="@dimen/fab_margin"
+                    android:layout_below="@+id/name"
+                    android:textColor="@color/green"
+                    android:textSize="@dimen/fab_margin"
+                    android:layout_marginLeft="70dp"
+                    android:layout_height="wrap_content" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_below="@+id/dcount"
+                android:background="@color/green"
+                android:text="vote"
+                android:id="@+id/vote"
+                android:layout_marginBottom="@dimen/fab_margin"
+                android:textColor="@color/black_overlay"
+                android:layout_centerHorizontal="true"
+                android:layout_height="wrap_content" />
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+</FrameLayout>

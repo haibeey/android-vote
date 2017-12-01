@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.haibeey.vote.activities.Home"
+    tools:showIn="@layout/app_bar_home">
+
+    <android.support.v4.view.ViewPager
+        android:layout_width="wrap_content"
+        android:id="@+id/vpager"
+        android:layout_height="wrap_content">
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tablayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <android.support.design.widget.TabItem
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:id="@+id/tab1"
+                android:text="topics"/>
+
+            <android.support.design.widget.TabItem
+                android:layout_height="wrap_content"
+                android:id="@+id/tab2"
+                android:layout_width="wrap_content"
+                android:text="tab2"/>
+        </android.support.design.widget.TabLayout>
+    </android.support.v4.view.ViewPager>
+
+</android.support.constraint.ConstraintLayout>
