@@ -25,6 +25,8 @@ public class dbHelper extends SQLiteOpenHelper {
         db.execSQL("create table Topics (id integer primary key, title text,count  text,date text,by text)");
         db.execSQL("create table Choice (id integer primary key ,title text ,name text,count text,by text)");
         db.execSQL("create table User (id integer primary key ,title text ,count text)");
+
+        db.close();
     }
 
     @Override
@@ -140,7 +142,7 @@ public class dbHelper extends SQLiteOpenHelper {
 
             cur.moveToFirst();
 
-            ArrayList choice_=new ArrayList();
+            ArrayList choice_=new ArrayList<>();
             //updating the array list
             while(!cur.isAfterLast()){
                 choice_.add(new String[]{cur.getString(0),cur.getString(1)});
@@ -176,7 +178,11 @@ public class dbHelper extends SQLiteOpenHelper {
 
         Cursor cur = db.query("Topics",new String[]{"title"},"title=?",new  String[]{title},null,null,null);
 
-        return cur.getCount()>=1;
+        boolean result=cur.getCount()>=1;
+
+        cur.close();
+
+        return  result;
     }
 
     public boolean topicInUser(String title){
@@ -184,7 +190,11 @@ public class dbHelper extends SQLiteOpenHelper {
 
         Cursor cur = db.query("User",new String[]{"title"},"title=?",new  String[]{title},null,null,null);
 
-        return cur.getCount()>=1;
+        boolean result=cur.getCount()>=1;
+
+        cur.close();
+
+        return  result;
     }
 
 }
