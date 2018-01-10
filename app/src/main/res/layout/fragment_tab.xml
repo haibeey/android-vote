@@ -3,13 +3,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.haibeey.vote.fragments.TabFragment">
-
-        <android.support.v7.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:id="@+id/tab1RV"
-            android:layout_centerHorizontal="true"
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:layout_width="wrap_content"
+            android:id="@+id/SWL"
             android:layout_height="wrap_content">
 
-        </android.support.v7.widget.RecyclerView>
+                <android.support.v7.widget.RecyclerView
+                        android:layout_width="match_parent"
+                        android:id="@+id/tab1RV"
+                        android:layout_centerHorizontal="true"
+                        android:layout_height="wrap_content">
+
+                </android.support.v7.widget.RecyclerView>
+        </android.support.v4.widget.SwipeRefreshLayout>
 
 </FrameLayout>
