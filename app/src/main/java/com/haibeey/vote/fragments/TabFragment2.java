@@ -1,5 +1,6 @@
 package com.haibeey.vote.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -25,6 +26,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.haibeey.vote.R;
+import com.haibeey.vote.activities.Home;
 import com.haibeey.vote.activities.profile;
 import com.haibeey.vote.connections.connection;
 import com.haibeey.vote.datas.cacheClass;
@@ -237,8 +239,9 @@ public class TabFragment2 extends Fragment implements connection.responseListern
                             JSONObject jsonObject=new JSONObject(result);
                             if(jsonObject.getString("response").equals("ok")){
                                 Snackbar.make(v,"you created a poll go invite users to vote",Snackbar.LENGTH_SHORT).show();
-                                Intent I=new Intent(context,profile.class);
-                                //startActivity(I);
+
+                                Intent I=new Intent(context,Home.class);
+                                startActivity(I);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
