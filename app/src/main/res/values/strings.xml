@@ -31,4 +31,5 @@
     <string name="title_activity_vote">vote</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="onFailure">Something Went Wrong</string>
 </resources>
