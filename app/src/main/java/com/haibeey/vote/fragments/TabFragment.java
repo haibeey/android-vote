@@ -6,7 +6,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -34,15 +36,22 @@ public class TabFragment extends Fragment implements connection.responseListerne
     topicsAdapter topicAdapter;
     dbHelper DbHelper;
     Handler myHandler;
+    View v;
+    RecyclerView recyclerView;
+    SwipeRefreshLayout swipeRefreshLayout;
 
     public TabFragment() {
+        
         myHandler=new Handler(){
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
-                addToDb(msg.obj.toString());
-                topicAdapter.Topics=new dbHelper(getContext()).getDataFromTopic();
-                topicAdapter.notifyDataSetChanged();
+                if(msg.obj.toString().contains("{") && msg.obj.toString().contains("}")){
+                    addToDb(msg.obj.toString());
+                    topicAdapter.notifyDataSetChanged();
+                }else {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
             }
         };
     }
@@ -60,9 +69,13 @@ public class TabFragment extends Fragment implements connection.responseListerne
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         topicAdapter=new topicsAdapter(getActivity());
-        View v=inflater.inflate(R.layout.fragment_tab, container, false);
+        v=inflater.inflate(R.layout.fragment_tab, container, false);
+        //setting up recyclerview
+        swipeRefreshLayout=(SwipeRefreshLayout) v.findViewById(R.id.SWL);
+        //setting refreshlayout
+        onSwipeReFreshLayout(swipeRefreshLayout);
         //setup adpater
-        RecyclerView recyclerView=(RecyclerView) v.findViewById(R.id.tab1RV);
+        recyclerView=(RecyclerView) v.findViewById(R.id.tab1RV);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(topicAdapter);
 
@@ -70,14 +83,41 @@ public class TabFragment extends Fragment implements connection.responseListerne
     }
 
 
+    private void onSwipeReFreshLayout(final SwipeRefreshLayout swipeRefreshLayout){
+        if(swipeRefreshLayout!=null){
+            swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    swipeRefreshLayout.setRefreshing(true);
+                    load();
+                }
+            });
+        }else{
+            load();
+        }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(DbHelper!=null){
+            updateTopic();
+            topicAdapter.notifyDataSetChanged();
+        }
+        Log.i("am resuming","resuming");
+    }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        load();
+    }
+
+    private void load(){
         //set up local database and cthe connection class
-        DbHelper=new dbHelper(context);
+        DbHelper=new dbHelper(getContext());
         //update local database
-        Connection=new connection((Activity) context,context,"http://haibeeyy.pythonanywhere.com/");
+        Connection=new connection( getActivity(),getContext(),"http://haibeeyy.pythonanywhere.com/");
         Connection.buildUrlAndRequest();
         Connection.setListenerForFragment(this);
 
@@ -86,7 +126,6 @@ public class TabFragment extends Fragment implements connection.responseListerne
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     private synchronized void addToDb(final String result){
@@ -143,6 +182,7 @@ public class TabFragment extends Fragment implements connection.responseListerne
                 }catch (JSONException e){
                     e.printStackTrace();
                 }
+                topicAdapter.Topics=new dbHelper(getContext()).getDataFromTopic();
             }
         });
 
@@ -155,9 +195,23 @@ public class TabFragment extends Fragment implements connection.responseListerne
         }
     }
 
+    private synchronized  void updateTopic(){
+        Thread thread=new Thread(new Runnable() {
+            @Override
+            public void run() {
+                topicAdapter.Topics=new dbHelper(getContext()).getDataFromTopic();
+            }
+        });
+
+        thread.start();
+    }
+
     @Override
     public void failure() {
-
+        Message message=new Message();
+        message.obj="";
+        myHandler.sendMessage(message);
+        Snackbar.make(v,R.string.onFailure,Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
@@ -170,5 +224,8 @@ public class TabFragment extends Fragment implements connection.responseListerne
         } catch (IOException e) {
             e.printStackTrace();
         }
+        Message message=new Message();
+        message.obj="";
+        myHandler.sendMessage(message);
     }
 }
