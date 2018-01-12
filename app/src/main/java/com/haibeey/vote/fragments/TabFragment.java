@@ -78,7 +78,7 @@ public class TabFragment extends Fragment implements connection.responseListerne
         recyclerView=(RecyclerView) v.findViewById(R.id.tab1RV);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(topicAdapter);
-
+        load();
         return v;
     }
 
@@ -104,13 +104,11 @@ public class TabFragment extends Fragment implements connection.responseListerne
             updateTopic();
             topicAdapter.notifyDataSetChanged();
         }
-        Log.i("am resuming","resuming");
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        load();
     }
 
     private void load(){
@@ -216,7 +214,7 @@ public class TabFragment extends Fragment implements connection.responseListerne
 
     @Override
     public void success(Response response) {
-        //if sucess sent the the result to an handler
+        //if sucess send the result to an handler
         try {
             Message message=new Message();
             message.obj=response.body().string();
