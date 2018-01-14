@@ -25,8 +25,6 @@ public class dbHelper extends SQLiteOpenHelper {
         db.execSQL("create table Topics (id integer primary key, title text,count  text,date text,by text)");
         db.execSQL("create table Choice (id integer primary key ,title text ,name text,count text,by text)");
         db.execSQL("create table User (id integer primary key ,title text ,count text)");
-
-        db.close();
     }
 
     @Override
@@ -45,7 +43,6 @@ public class dbHelper extends SQLiteOpenHelper {
 
         db.insert("Topics",null,values);
 
-        db.close();
         Log.i(LogTag,"new topic "+title+" inserted succesfully");
     }
 
@@ -60,7 +57,6 @@ public class dbHelper extends SQLiteOpenHelper {
 
         db.insert("Choice",null,values);
 
-        db.close();
         Log.i(LogTag,"new choice "+title+" inserted succesfully");
     }
 
@@ -73,7 +69,6 @@ public class dbHelper extends SQLiteOpenHelper {
 
         db.insert("User",null,values);
 
-        db.close();
     }
 
     public void updateTopic(String title,String date,int count,String by){
@@ -87,7 +82,6 @@ public class dbHelper extends SQLiteOpenHelper {
 
         db.update("Topics",values,"title=? and by=?",new String[]{title,by});
 
-        db.close();
         Log.i(LogTag,"new topic "+title+" updated succesfully");
     }
 
@@ -102,7 +96,6 @@ public class dbHelper extends SQLiteOpenHelper {
 
         db.update("Choice",values,"name=? and title=? and by=?",new String[]{name,title,by});
 
-        db.close();
         Log.i(LogTag,"new choice "+title+" choice succesfully");
     }
 
@@ -115,11 +108,12 @@ public class dbHelper extends SQLiteOpenHelper {
 
         db.update("Choice",values,"title=?",new String[]{title});
 
-        db.close();
+
     }
 
     public ArrayList<dataHolder> getDataFromTopic() {
         //select all data from db
+
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cur = db.rawQuery("Select * from Topics", null);
 
@@ -132,7 +126,6 @@ public class dbHelper extends SQLiteOpenHelper {
             arrayList.add(curdata);
             cur.moveToNext();
         }
-        cur.close();
 
         //this now fill the topic and there corresponding option
         for(int choice=0;choice<arrayList.size();choice++){
@@ -150,7 +143,6 @@ public class dbHelper extends SQLiteOpenHelper {
                 cur.moveToNext();
             }
 
-            cur.close();
         }
         return arrayList;
     }
@@ -168,7 +160,6 @@ public class dbHelper extends SQLiteOpenHelper {
             arrayList.add(new String[]{cur.getString(1),cur.getString(2),cur.getString(3)});
             cur.moveToNext();
         }
-        cur.close();
 
         return  arrayList;
     }
@@ -180,8 +171,6 @@ public class dbHelper extends SQLiteOpenHelper {
 
         boolean result=cur.getCount()>=1;
 
-        cur.close();
-
         return  result;
     }
 
@@ -192,7 +181,6 @@ public class dbHelper extends SQLiteOpenHelper {
 
         boolean result=cur.getCount()>=1;
 
-        cur.close();
 
         return  result;
     }
