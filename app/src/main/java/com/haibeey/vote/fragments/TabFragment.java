@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -39,6 +40,8 @@ public class TabFragment extends Fragment implements connection.responseListerne
     View v;
     RecyclerView recyclerView;
     SwipeRefreshLayout swipeRefreshLayout;
+    NestedScrollView nestedScrollView;
+    int query=1;
 
     public TabFragment() {
         
@@ -70,9 +73,15 @@ public class TabFragment extends Fragment implements connection.responseListerne
         // Inflate the layout for this fragment
         topicAdapter=new topicsAdapter(getActivity());
         v=inflater.inflate(R.layout.fragment_tab, container, false);
+        //getting a netedscrollview
+        nestedScrollView=(NestedScrollView)v.findViewById(R.id.scrollView);
+        //setting a nestedscrollview
+        setScrollViewListener();
+
         //setting up recyclerview
         swipeRefreshLayout=(SwipeRefreshLayout) v.findViewById(R.id.SWL);
         //setting refreshlayout
+
         onSwipeReFreshLayout(swipeRefreshLayout);
         //setup adpater
         recyclerView=(RecyclerView) v.findViewById(R.id.tab1RV);
@@ -97,6 +106,17 @@ public class TabFragment extends Fragment implements connection.responseListerne
         }
     }
 
+    private void setScrollViewListener(){
+        nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if(nestedScrollView.canScrollVertically(1)){
+
+                }
+            }
+        });
+    }
+
     @Override
     public void onResume(){
         super.onResume();
@@ -116,8 +136,10 @@ public class TabFragment extends Fragment implements connection.responseListerne
         DbHelper=new dbHelper(getContext());
         //update local database
         Connection=new connection( getActivity(),getContext(),"http://haibeeyy.pythonanywhere.com/");
+        Connection.addQuery("category",String.valueOf(query));
         Connection.buildUrlAndRequest();
         Connection.setListenerForFragment(this);
+        query++;
 
         try {
             Connection.getResponseAync();
