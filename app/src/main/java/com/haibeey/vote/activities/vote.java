@@ -28,7 +28,7 @@ public class vote extends AppCompatActivity {
         textView.setText(I.getStringExtra("title"));
 
         viewPager=(ViewPager)findViewById(R.id.voteViewPager);
-        adapter=new voteSlidingAdapter(getSupportFragmentManager(),this,I.getStringExtra("title"));
+        adapter=new voteSlidingAdapter(getSupportFragmentManager(),this,I.getStringExtra("title"),I.getIntExtra("id",1));
         viewPager.setAdapter(adapter);
     }
 }
