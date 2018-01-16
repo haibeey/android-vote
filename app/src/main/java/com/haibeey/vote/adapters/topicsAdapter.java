@@ -52,16 +52,11 @@ public class topicsAdapter extends RecyclerView.Adapter<topicsViewHolder> {
         holder.tv1.setText(cardContent.getTitle());
         holder.tv2.setText("Total votes so far "+cardContent.getCount());
 
+
         LinearLayout linearLayout=(LinearLayout) holder.itemView.findViewById(R.id.linear);
 
         ArrayList<String[]> arrayList=cardContent.getChoice();
-        for(int choice=0;choice<arrayList.size();choice++){
-            //previous view are to be cleared for the new view
-            LinearLayout li=(LinearLayout) linearLayout.findViewById(R.id.alayout);
-            if(li!=null){
-                linearLayout.removeView(li);
-            }
-        }
+        linearLayout.removeAllViews();
         for(int choice=0;choice<arrayList.size();choice++){
             LinearLayout linearLayout1=(LinearLayout)LayoutInflater.from(context).inflate(R.layout.choice_layout,null,false);
 
@@ -83,6 +78,7 @@ public class topicsAdapter extends RecyclerView.Adapter<topicsViewHolder> {
                 if(Util.isConnected()){
                     Intent I=new Intent(context,vote.class);
                     I.putExtra("title",cardContent.getTitle());
+                    I.putExtra("id",cardContent.getID());
                     context.startActivity(I);
                 }else {
                     Snackbar.make(holder.itemView,"No Internet Connection",Snackbar.LENGTH_LONG).show();
