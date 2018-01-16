@@ -37,13 +37,15 @@ public class voteSlidingAdapter extends FragmentStatePagerAdapter implements con
     private Context context;
     private static Handler myHandler;
     private  String topic;
+    private  String id;
     private int listCount=0;
 
-    public voteSlidingAdapter(FragmentManager fm, Context context,String topic) {
+    public voteSlidingAdapter(FragmentManager fm, Context context,String topic,int id) {
         super(fm);
         //The topic to query to the backend
         this.topic=topic;
-
+        //The id to query to the backend
+        this.id=String.valueOf(id);
         //Ds for adapter population
         arrayList = new ArrayList<>();
 
@@ -63,6 +65,7 @@ public class voteSlidingAdapter extends FragmentStatePagerAdapter implements con
         //make asynchronous request to get the details of the vote
         connection Connection = new connection((Activity) context, context, "http://haibeeyy.pythonanywhere.com/vote");
         Connection.addQuery("load", "load");
+        Connection.addQuery("id",this.id);
         Connection.addQuery("topic",topic);
         Connection.buildUrlAndRequest();
         Connection.setListenerForAdpter(this);
