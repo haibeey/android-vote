@@ -2,6 +2,7 @@ package com.haibeey.vote.datas;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -22,8 +23,8 @@ public class dbHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         //initial the databse
-        db.execSQL("create table Topics (id integer primary key, title text,count  text,date text,by text)");
-        db.execSQL("create table Choice (id integer primary key ,title text ,name text,count text,by text)");
+        db.execSQL("create table Topics (id integer, title text,count  text,date text,by text)");
+        db.execSQL("create table Choice (id integer ,title text ,name text,count text,by text)");
         db.execSQL("create table User (id integer primary key ,title text ,count text)");
     }
 
@@ -32,10 +33,11 @@ public class dbHelper extends SQLiteOpenHelper {
 
     }
 
-    public void insertTopic(String title,String date,int count,String by){
+    public void insertTopic(int id,String title,String date,int count,String by){
         SQLiteDatabase db=this.getWritableDatabase();
 
         ContentValues values=new ContentValues();
+        values.put("id",id);
         values.put("title",title);
         values.put("date",date);
         values.put("by",by);
@@ -46,11 +48,12 @@ public class dbHelper extends SQLiteOpenHelper {
         Log.i(LogTag,"new topic "+title+" inserted succesfully");
     }
 
-    public  void insertInChoice(String title,String name,String count,String by){
+    public  void insertInChoice(int id,String title,String name,String count,String by){
         SQLiteDatabase db=this.getWritableDatabase();
 
         ContentValues values=new ContentValues();
         values.put("title",title);
+        values.put("id",id);
         values.put("count",String.valueOf(count));
         values.put("name",name);
         values.put("by",by);
@@ -71,24 +74,26 @@ public class dbHelper extends SQLiteOpenHelper {
 
     }
 
-    public void updateTopic(String title,String date,int count,String by){
+    public void updateTopic(int id,String title,String date,int count,String by){
         SQLiteDatabase db=this.getWritableDatabase();
 
         ContentValues values=new ContentValues();
         values.put("title",title);
+        values.put("id",id);
         values.put("date",date);
         values.put("by",by);
         values.put("count",String.valueOf(count));
 
-        db.update("Topics",values,"title=? and by=?",new String[]{title,by});
+        db.update("Topics",values,"title=? and by=? and date=?",new String[]{title,by});
 
         Log.i(LogTag,"new topic "+title+" updated succesfully");
     }
 
-    public  void updateChoice(String title,String name,int count,String by){
+    public  void updateChoice(int id,String title,String name,int count,String by){
         SQLiteDatabase db=this.getWritableDatabase();
 
         ContentValues values=new ContentValues();
+        values.put("id",id);
         values.put("title",title);
         values.put("by",by);
         values.put("name",name);
@@ -108,7 +113,6 @@ public class dbHelper extends SQLiteOpenHelper {
 
         db.update("Choice",values,"title=?",new String[]{title});
 
-
     }
 
     public ArrayList<dataHolder> getDataFromTopic() {
@@ -122,7 +126,7 @@ public class dbHelper extends SQLiteOpenHelper {
         cur.moveToFirst();
         //get all the topic so far but without corresponding options
         while (!cur.isAfterLast()) {
-            dataHolder curdata=new dataHolder(cur.getString(1),cur.getString(2),cur.getString(3),cur.getString(4),null);
+            dataHolder curdata=new dataHolder(cur.getInt(0),cur.getString(1),cur.getString(2),cur.getString(3),cur.getString(4),null);
             arrayList.add(curdata);
             cur.moveToNext();
         }
@@ -131,11 +135,11 @@ public class dbHelper extends SQLiteOpenHelper {
         for(int choice=0;choice<arrayList.size();choice++){
             dataHolder curHolder=arrayList.get(choice);
 
-            cur = db.query("Choice",new String[]{"name","count"},"title=? and by=?",new  String[]{curHolder.getTitle(),curHolder.getBy()},null,null,null);
+            cur = db.query("Choice",new String[]{"name","count"},"id=? and title=? and by=?",new  String[]{String.valueOf(curHolder.getID()),curHolder.getTitle(),curHolder.getBy()},null,null,null);
 
             cur.moveToFirst();
 
-            ArrayList choice_=new ArrayList<>();
+            ArrayList choice_=new ArrayList<String[]>();
             //updating the array list
             while(!cur.isAfterLast()){
                 choice_.add(new String[]{cur.getString(0),cur.getString(1)});
@@ -164,10 +168,10 @@ public class dbHelper extends SQLiteOpenHelper {
         return  arrayList;
     }
 
-    public boolean topicInTopic(String title){
+    public boolean topicInTopic(int id,String title){
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cur = db.query("Topics",new String[]{"title"},"title=?",new  String[]{title},null,null,null);
+        Cursor cur = db.query("Topics",new String[]{"title"},"title=? and id=?",new  String[]{title,String.valueOf(id)},null,null,null);
 
         boolean result=cur.getCount()>=1;
 
