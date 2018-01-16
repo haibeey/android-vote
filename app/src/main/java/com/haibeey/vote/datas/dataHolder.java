@@ -13,8 +13,10 @@ public class dataHolder {
     String date;
     String by;
     ArrayList choices;
-    public dataHolder(String title,String count,String date,String by,ArrayList choices){
+    int id;
+    public dataHolder(int id,String title,String count,String date,String by,ArrayList choices){
         this.title=title;
+        this.id=id;
         this.choices=choices;
         this.date=date;
         this.count=count;
@@ -59,5 +61,13 @@ public class dataHolder {
 
     public ArrayList getChoice(){
         return choices;
+    }
+
+    public int getID(){
+        return  id;
+    }
+
+    public void setID(int id){
+        this.id=id;
     }
 }
