@@ -42,6 +42,7 @@ public class TabFragment extends Fragment implements connection.responseListerne
     SwipeRefreshLayout swipeRefreshLayout;
     NestedScrollView nestedScrollView;
     int query=1;
+    private boolean isLoading=false;
 
     public TabFragment() {
         
@@ -51,7 +52,9 @@ public class TabFragment extends Fragment implements connection.responseListerne
                 super.handleMessage(msg);
                 if(msg.obj.toString().contains("{") && msg.obj.toString().contains("}")){
                     addToDb(msg.obj.toString());
+                }else if(msg.obj.toString().equals("changed")){
                     topicAdapter.notifyDataSetChanged();
+                    swipeRefreshLayout.setRefreshing(false);
                 }else {
                     swipeRefreshLayout.setRefreshing(false);
                 }
@@ -87,7 +90,6 @@ public class TabFragment extends Fragment implements connection.responseListerne
         recyclerView=(RecyclerView) v.findViewById(R.id.tab1RV);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(topicAdapter);
-        load();
         return v;
     }
 
@@ -101,8 +103,6 @@ public class TabFragment extends Fragment implements connection.responseListerne
                     load();
                 }
             });
-        }else{
-            load();
         }
     }
 
@@ -110,8 +110,13 @@ public class TabFragment extends Fragment implements connection.responseListerne
         nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                if(nestedScrollView.canScrollVertically(1)){
+                View view = (nestedScrollView.getChildAt(nestedScrollView.getChildCount() - 1));
+                int diff = (view.getBottom() - (nestedScrollView.getHeight() + nestedScrollView.getScrollY()));
+                //Log.i("what",String.valueOf(diff)+" "+String.valueOf(nestedScrollView.getHeight())+" "+String.valueOf(nestedScrollView.getScrollY()));
 
+                // if diff is zero, then the bottom has been reached
+                if (diff <= 10) {
+                    load();
                 }
             }
         });
@@ -133,7 +138,17 @@ public class TabFragment extends Fragment implements connection.responseListerne
 
     private void load(){
         //set up local database and cthe connection class
-        DbHelper=new dbHelper(getContext());
+        if(isLoading){
+            if(v!=null){
+                Snackbar.make(v," Loading ",Snackbar.LENGTH_SHORT).show();
+            }
+            return;
+        }
+        isLoading=true;//flag to not load again while loading
+
+        if(DbHelper==null){
+            DbHelper=new dbHelper(getContext());
+        }
         //update local database
         Connection=new connection( getActivity(),getContext(),"http://haibeeyy.pythonanywhere.com/");
         Connection.addQuery("category",String.valueOf(query));
@@ -173,6 +188,7 @@ public class TabFragment extends Fragment implements connection.responseListerne
                     for(int i=0;i<jsonArray2.length();i++){
 
                         JSONObject jsonObjectt=jsonArray2.getJSONObject(i);
+                        int id =jsonObjectt.getInt("id");
                         String title=jsonObjectt.getString("title");
                         String date=jsonObjectt.getString("date");
                         String by=jsonObjectt.getString("created_by");
@@ -180,22 +196,22 @@ public class TabFragment extends Fragment implements connection.responseListerne
                         JSONArray choices =jsonObjectt.getJSONArray("choices");
 
                         //add to database ,checks if data is already present
-                        if(DbHelper.topicInTopic(title)){
+                        if(DbHelper.topicInTopic(id,title)){
 
-                            DbHelper.updateTopic(title,date,count,by);
+                            DbHelper.updateTopic(id,title,date,count,by);
 
                             for(int choice=0;choice<choices.length();choice++){
                                 JSONArray jsonArray3=choices.getJSONArray(choice);
-                                DbHelper.updateChoice(title,jsonArray3.getString(0),jsonArray3.getInt(1),by);
+                                DbHelper.updateChoice(id,title,jsonArray3.getString(0),jsonArray3.getInt(1),by);
                             }
 
                         }else{
 
-                            DbHelper.insertTopic(title,date,count,by);
+                            DbHelper.insertTopic(id,title,date,count,by);
 
                             for(int choice=0;choice<choices.length();choice++){
                                 JSONArray jsonArray3=choices.getJSONArray(choice);
-                                DbHelper.insertInChoice(title,jsonArray3.getString(0),String.valueOf(jsonArray3.getInt(1)),by);
+                                DbHelper.insertInChoice(id,title,jsonArray3.getString(0),String.valueOf(jsonArray3.getInt(1)),by);
                             }
                         }
                     }
@@ -203,6 +219,9 @@ public class TabFragment extends Fragment implements connection.responseListerne
                     e.printStackTrace();
                 }
                 topicAdapter.Topics=new dbHelper(getContext()).getDataFromTopic();
+                Message message=new Message();
+                message.obj="changed";
+                myHandler.sendMessage(message);
             }
         });
 
@@ -224,14 +243,20 @@ public class TabFragment extends Fragment implements connection.responseListerne
         });
 
         thread.start();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void failure() {
         Message message=new Message();
-        message.obj="";
+        message.obj="failed";
         myHandler.sendMessage(message);
         Snackbar.make(v,R.string.onFailure,Snackbar.LENGTH_SHORT).show();
+        isLoading=false;
     }
 
     @Override
@@ -245,7 +270,8 @@ public class TabFragment extends Fragment implements connection.responseListerne
             e.printStackTrace();
         }
         Message message=new Message();
-        message.obj="";
+        message.obj="failed";
         myHandler.sendMessage(message);
+        isLoading=false;
     }
 }

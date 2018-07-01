@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import java.net.InetAddress;
@@ -52,24 +53,9 @@ public class utilities {
     }
 
 
-    public static String getLocalIPAddress () {
-        String ip=null;
-        try {
-            for (Enumeration en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
-                NetworkInterface intf = (NetworkInterface) en.nextElement();
-                for (Enumeration enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
-                    InetAddress inetAddress = (InetAddress) enumIpAddr.nextElement();
-                    if (!inetAddress.isLoopbackAddress()) {
-                        if(inetAddress.getHostAddress().matches("[0-9]+.[0-9]+.[0-9]+.[0-9]+")){
-                            ip=inetAddress.getHostAddress();
-                        }
-                    }
-                }
-            }
-        } catch (SocketException ex) {
-            Log.i("SocketException ", ex.toString());
-        }
-        return ip;
+    public static String getLocalIPAddress (Context context) {
+        TelephonyManager telephonyManager=(TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
+        return ""+telephonyManager.getDeviceId();
 
     }
 }

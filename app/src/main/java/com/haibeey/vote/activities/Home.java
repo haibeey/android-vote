@@ -58,10 +58,10 @@ import okhttp3.ResponseBody;
 public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     public ViewPager viewPager;
-    TabAdapter tabAdapter;
-    TabLayout tabLayout;
-    DrawerLayout drawerLayout;
-    android.support.v7.app.ActionBarDrawerToggle mDrawerToggle;
+    private TabAdapter tabAdapter;
+    private TabLayout tabLayout;
+    private DrawerLayout drawerLayout;
+    private android.support.v7.app.ActionBarDrawerToggle mDrawerToggle;
 
 
     @Override

@@ -81,7 +81,7 @@ public class voteSliding extends Fragment implements connection.responseListerne
             @Override
             public void onClick(View v) {
                 connection Con=new connection(getActivity(),getContext(),"http://haibeeyy.pythonanywhere.com/vote");
-                Con.addQuery("ip", utilities.getLocalIPAddress());
+                Con.addQuery("ip", utilities.getLocalIPAddress(getContext()));
                 Con.addQuery("choices",name);
                 Con.addQuery("topic",title);
                 Con.addQuery("vote","vote");
@@ -113,9 +113,9 @@ public class voteSliding extends Fragment implements connection.responseListerne
 
     @Override
     public void success(Response response) {
-
+            String result="";
         try {
-            String result=response.body().string();
+            result=response.body().string();
             JSONObject jsonObject=new JSONObject(result);
             if(jsonObject.getString("response").equals("ok") && !jsonObject.getString("message").equals("you voted before")){
                 Snackbar.make(v,"you just voted for "+name,Snackbar.LENGTH_LONG).show();
@@ -125,8 +125,10 @@ public class voteSliding extends Fragment implements connection.responseListerne
             }
 
         } catch (IOException e) {
+            Log.i("http message",result);
             e.printStackTrace();
         }catch (JSONException e){
+            Log.i("http message",result);
             e.printStackTrace();
         }
     }

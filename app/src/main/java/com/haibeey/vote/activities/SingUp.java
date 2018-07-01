@@ -263,6 +263,7 @@ public class SingUp extends AppCompatActivity {
             }
             Con.buildUrlAndPostRequestWithFile(file,fileName,new String[]{"email",mEmail},new String[]{"firstname",first},
                     new String[]{"password",mPassword},new String[]{"lastname",last});
+
             try {
                 response = Con.getResponse().body().string();
                 JSONObject jObj=new JSONObject(response);

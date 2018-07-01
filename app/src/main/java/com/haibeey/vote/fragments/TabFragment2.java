@@ -27,6 +27,8 @@ import android.widget.Toast;
 
 import com.haibeey.vote.R;
 import com.haibeey.vote.activities.Home;
+import com.haibeey.vote.activities.LoginActivity;
+import com.haibeey.vote.activities.SingUp;
 import com.haibeey.vote.activities.profile;
 import com.haibeey.vote.connections.connection;
 import com.haibeey.vote.datas.cacheClass;
@@ -116,7 +118,22 @@ public class TabFragment2 extends Fragment implements connection.responseListern
                 if(options<2){
                     Snackbar.make(v,"You Need To Add Atleast two options",Snackbar.LENGTH_SHORT).show();
                 }else{
-                    new requester().execute("final","http://haibeeyy.pythonanywhere.com/create_poll");
+                    cacheClass cache=new cacheClass(getContext(),"login");
+                    if(!cache.getString("email","*").equals("8"))
+                        new requester().execute("final","http://haibeeyy.pythonanywhere.com/create_poll");
+                    else{
+                        new AlertDialog.Builder(getContext()).setNegativeButton("Sign Up", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                startActivity(new Intent(getContext().getApplicationContext(), SingUp.class));
+                            }
+                        }).setPositiveButton("Log in", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                startActivity(new Intent(getContext().getApplicationContext(), LoginActivity.class));
+                            }
+                        }).show();
+                    }
                 }
 
             }

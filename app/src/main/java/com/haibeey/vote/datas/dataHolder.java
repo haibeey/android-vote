@@ -8,12 +8,12 @@ import java.util.jar.Pack200;
  */
 
 public class dataHolder {
-    String title;
-    String count;
-    String date;
-    String by;
-    ArrayList choices;
-    int id;
+    private    String title;
+    private String count;
+    private String date;
+    private String by;
+    private ArrayList choices;
+    private int id;
     public dataHolder(int id,String title,String count,String date,String by,ArrayList choices){
         this.title=title;
         this.id=id;
